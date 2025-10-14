@@ -13,7 +13,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed default_katas.yaml
+//go:embed katas.yaml
 var defaultKatas []byte
 
 func usage() {
@@ -24,7 +24,7 @@ func usage() {
 
 var (
 	doneFlag = flag.String("done", "", "mark `kata` as done today")
-	initFlag = flag.Bool("init", false, "initialize config with default katas at "+configPath())
+	initFlag = flag.Bool("init", false, "initialize config at "+configPath())
 )
 
 func main() {

@@ -1,18 +1,12 @@
-Katas is a simple CLI tool to track your programming training.
+Katas is a simple CLI tool to track your programming training. It's pretty low tech.
 
 ```
-# Installation and initialization.
+# Install and initialize.
 $ go install github.com/go-monk/katas
 $ katas -init
 
-# Daily training.
+# Select a kata. First, just copy it and meditate on it. Later, 
+# rewrite the code from memory. Mark it as done. Repeat tomorrow.
 $ katas
-Kata         Last done  Done  URL
-----         ---------  ----  ---
-hello        never      0x    https://github.com/golang/example/tree/master/hello
-helloserver  never      0x    https://github.com/golang/example/tree/master/helloserver
-outyet       never      0x    https://github.com/golang/example/tree/master/outyet
-----                    ----  
-3                       0x
 $ katas -done hello
 ```

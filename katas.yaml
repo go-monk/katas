@@ -1,0 +1,9 @@
+# Short programs written by experts.
+- name: hello
+  url: https://go.googlesource.com/example/+/HEAD/hello
+- name: helloserver
+  url: https://go.googlesource.com/example/+/HEAD/helloserver
+- name: outyet
+  url: https://go.googlesource.com/example/+/HEAD/outyet
+- name: chat
+  url: https://go.dev/talks/2012/concurrency/support/chat.go
