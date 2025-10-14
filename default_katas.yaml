@@ -1,0 +1,7 @@
+# Short programs written by experts.
+- name: hello
+  url: https://github.com/golang/example/tree/master/hello
+- name: helloserver
+  url: https://github.com/golang/example/tree/master/helloserver
+- name: outyet
+  url: https://github.com/golang/example/tree/master/outyet
