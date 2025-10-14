@@ -2,7 +2,7 @@ Katas is a simple CLI tool to track your programming training. It's pretty low t
 
 ```
 # Install and initialize.
-$ go install github.com/go-monk/katas
+$ go install github.com/go-monk/katas@latest
 $ katas -init
 
 # Select a kata. First, just copy it and meditate on it. Later, 
