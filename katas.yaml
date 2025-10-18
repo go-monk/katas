@@ -2,7 +2,7 @@
 - name: hello # command-line program
   url: https://go.googlesource.com/example/+/HEAD/hello
 - name: http4 # web server
-  url: https://github.com/adonovan/gopl.io/blob/master/ch7/http4/main.go
+  url: https://github.com/adonovan/gopl.io/blob/master/ch7/http4
 - name: chat # chatting over TCP
   url: https://go.dev/talks/2012/concurrency/support/chat.go
 - name: atomic-counters # accessing simple data concurrently

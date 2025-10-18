@@ -68,7 +68,7 @@ type katas struct {
 
 func configPath() string {
 	h, _ := os.UserHomeDir()
-	return filepath.Join(h, ".config", "katas.yaml")
+	return filepath.Join(h, ".katas.yaml")
 }
 
 func newKatas() *katas {
@@ -120,33 +120,61 @@ func (k *katas) print() error {
 		return nil
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-	defer w.Flush()
+	tw := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
+	defer tw.Flush()
 
-	fmt.Fprintf(w, "Kata\tLast done\tDone\tURL\n")
-	fmt.Fprintf(w, "----\t---------\t----\t---\n")
+	format := "%v\t%v\t%v\t%v\n"
 
-	totalDone := 0
+	fmt.Fprintf(tw, format, "Name", "Done", "Last done", "URL")
+	fmt.Fprintf(tw, format, "----", "----", "---------", "---")
+
+	var totalTimesDone TimesDone
+	var latestLastDone LastDone
+
 	for _, kata := range k.katas {
-		lastDone := "never"
-		doneCount := len(kata.Done)
-		totalDone += doneCount
+		timesDone := TimesDone(len(kata.Done))
+		totalTimesDone += timesDone
 
-		if doneCount > 0 {
-			// Parse the last done date
-			if lastDate, err := time.Parse("2006-01-02", kata.Done[doneCount-1]); err == nil {
-				days := int(time.Since(lastDate).Hours() / 24)
-				lastDone = fmt.Sprintf("%d days ago", days)
+		var lastDone LastDone
+		for _, d := range kata.Done {
+			t, err := time.Parse("2006-01-02", d)
+			if err != nil {
+				log.Printf("parsing kata %q in %s: %v", kata.Name, configPath(), err)
+				continue
+			}
+			if t.After(lastDone.t) {
+				lastDone.t = t
+			}
+			if t.After(latestLastDone.t) {
+				latestLastDone.t = t
 			}
 		}
 
-		fmt.Fprintf(w, "%s\t%s\t%dx\t%s\n", kata.Name, lastDone, doneCount, kata.URL)
+		fmt.Fprintf(tw, format, kata.Name, timesDone, lastDone, kata.URL)
 	}
 
-	fmt.Fprintf(w, "----\t\t----\t\n")
-	fmt.Fprintf(w, "%d\t\t%dx\t\n", len(k.katas), totalDone)
+	fmt.Fprintf(tw, format, "----", "----", "---------", "---")
+	fmt.Fprintf(tw, format, len(k.katas), totalTimesDone, latestLastDone, "")
 
 	return nil
+}
+
+type LastDone struct {
+	t time.Time
+}
+
+func (ld LastDone) String() string {
+	if ld.t.IsZero() {
+		return "never"
+	}
+	daysAgo := int(time.Since(ld.t).Hours() / 24)
+	return fmt.Sprintf("%d days ago", daysAgo)
+}
+
+type TimesDone int
+
+func (d TimesDone) String() string {
+	return fmt.Sprintf("%dx", d)
 }
 
 // markDone marks a kata as completed today
