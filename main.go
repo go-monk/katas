@@ -24,7 +24,7 @@ func usage() {
 
 var (
 	doneFlag = flag.String("done", "", "mark `kata` as done today")
-	initFlag = flag.Bool("init", false, "initialize config at "+configPath())
+	initFlag = flag.Bool("init", false, "initialize "+katasFilePath())
 )
 
 func main() {
@@ -60,57 +60,57 @@ type kata struct {
 	Done []string `yaml:"done,omitempty"`
 }
 
-// katas represents the status of your programming training.
+// katas represent a programming training.
 type katas struct {
-	configPath string
-	katas      []kata
+	filePath string
+	katas    []kata
 }
 
-func configPath() string {
+func katasFilePath() string {
 	h, _ := os.UserHomeDir()
 	return filepath.Join(h, ".katas.yaml")
 }
 
 func newKatas() *katas {
-	return &katas{configPath: configPath()}
+	return &katas{filePath: katasFilePath()}
 }
 
 func (k *katas) initConfig() error {
-	if _, err := os.Stat(k.configPath); err == nil {
-		return fmt.Errorf("config file %s already exists", k.configPath)
+	if _, err := os.Stat(k.filePath); err == nil {
+		return fmt.Errorf("file %s already exists", k.filePath)
 	}
-	return os.WriteFile(k.configPath, defaultKatas, 0644)
+	return os.WriteFile(k.filePath, defaultKatas, 0644)
 }
 
-// load reads the katas from the config file
+// load reads katas from the file.
 func (k *katas) load() error {
-	data, err := os.ReadFile(k.configPath)
+	data, err := os.ReadFile(k.filePath)
 	if err != nil {
-		return fmt.Errorf("reading config file: %w", err)
+		return err
 	}
 
 	if err := yaml.Unmarshal(data, &k.katas); err != nil {
-		return fmt.Errorf("parsing config file: %w", err)
+		return fmt.Errorf("parsing file: %w", err)
 	}
 
 	return nil
 }
 
-// save writes the katas to the config file
+// save writes katas to the file.
 func (k *katas) save() error {
 	data, err := yaml.Marshal(k.katas)
 	if err != nil {
 		return fmt.Errorf("marshaling katas: %w", err)
 	}
 
-	if err := os.WriteFile(k.configPath, data, 0644); err != nil {
-		return fmt.Errorf("writing config file: %w", err)
+	if err := os.WriteFile(k.filePath, data, 0644); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-// print displays all katas with their status
+// print displays all katas with their status.
 func (k *katas) print() error {
 	if err := k.load(); err != nil {
 		return err
@@ -139,7 +139,7 @@ func (k *katas) print() error {
 		for _, d := range kata.Done {
 			t, err := time.Parse("2006-01-02", d)
 			if err != nil {
-				log.Printf("parsing kata %q in %s: %v", kata.Name, configPath(), err)
+				log.Printf("parsing kata %q in %s: %v", kata.Name, katasFilePath(), err)
 				continue
 			}
 			if t.After(lastDone.t) {
@@ -173,11 +173,11 @@ func (ld LastDone) String() string {
 
 type TimesDone int
 
-func (d TimesDone) String() string {
-	return fmt.Sprintf("%dx", d)
+func (td TimesDone) String() string {
+	return fmt.Sprintf("%dx", td)
 }
 
-// markDone marks a kata as completed today
+// markDone marks a kata as completed today.
 func (k *katas) markDone(name string) error {
 	if err := k.load(); err != nil {
 		return err
@@ -197,5 +197,5 @@ func (k *katas) markDone(name string) error {
 		}
 	}
 
-	return fmt.Errorf("kata %s not found in %s", name, k.configPath)
+	return fmt.Errorf("kata %s not found in %s", name, k.filePath)
 }
