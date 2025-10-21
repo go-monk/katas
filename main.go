@@ -47,10 +47,8 @@ func main() {
 		if err := katas.markDone(*doneFlag); err != nil {
 			log.Fatal(err)
 		}
-		return
 	}
-
-	katas.print()
+	katas.print(*doneFlag)
 }
 
 // kata represents a programming exercise.
@@ -111,7 +109,7 @@ func (k *katas) save() error {
 }
 
 // print displays all katas with their status.
-func (k *katas) print() error {
+func (k *katas) print(doneKata string) error {
 	if err := k.load(); err != nil {
 		return err
 	}
@@ -150,7 +148,11 @@ func (k *katas) print() error {
 			}
 		}
 
-		fmt.Fprintf(tw, format, kata.Name, timesDone, lastDone, kata.URL)
+		kataName := kata.Name
+		if kataName == doneKata {
+			kataName = "> " + kataName
+		}
+		fmt.Fprintf(tw, format, kataName, timesDone, lastDone, kata.URL)
 	}
 
 	fmt.Fprintf(tw, format, "----", "----", "---------", "---")
