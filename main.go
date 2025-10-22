@@ -14,7 +14,7 @@ import (
 )
 
 //go:embed katas.yaml
-var defaultKatas []byte
+var sampleKatas []byte
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: katas [options]\n")
@@ -24,7 +24,7 @@ func usage() {
 
 var (
 	doneFlag = flag.String("done", "", "mark `kata` as done today")
-	initFlag = flag.Bool("init", false, "initialize "+katasFilePath())
+	initFlag = flag.Bool("init", false, "initialize "+katasFilePath()+" with sample katas")
 )
 
 func main() {
@@ -66,7 +66,7 @@ type katas struct {
 
 func katasFilePath() string {
 	h, _ := os.UserHomeDir()
-	return filepath.Join(h, ".katas.yaml")
+	return filepath.Join(h, "katas.yaml")
 }
 
 func newKatas() *katas {
@@ -77,7 +77,7 @@ func (k *katas) initConfig() error {
 	if _, err := os.Stat(k.filePath); err == nil {
 		return fmt.Errorf("file %s already exists", k.filePath)
 	}
-	return os.WriteFile(k.filePath, defaultKatas, 0644)
+	return os.WriteFile(k.filePath, sampleKatas, 0644)
 }
 
 // load reads katas from the file.

@@ -1,13 +1,13 @@
 # Short programs written by experts
-- name: hello # command-line program
+- name: hello
   url: https://go.googlesource.com/example/+/HEAD/hello
-- name: http4 # web server
+- name: http4
   url: https://github.com/adonovan/gopl.io/blob/master/ch7/http4
-- name: chat # chatting over TCP
+- name: chat
   url: https://go.dev/talks/2012/concurrency/support/chat.go
-- name: atomic-counters # accessing simple data concurrently
+- name: atomic-counters
   url: https://gobyexample.com/atomic-counters
-- name: mutexes # accessing more complex data concurrently
+- name: mutexes
   url: https://gobyexample.com/mutexes
 - name: strings-and-runes
   url: https://gobyexample.com/strings-and-runes
