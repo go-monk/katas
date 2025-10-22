@@ -121,13 +121,14 @@ func (k *katas) print(doneKata string) error {
 	tw := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 	defer tw.Flush()
 
-	format := "%v\t%v\t%v\t%v\n"
+	format := "%v\t%v\t%v\t%v\t%v\n"
 
-	fmt.Fprintf(tw, format, "Name", "Done", "Last done", "URL")
-	fmt.Fprintf(tw, format, "----", "----", "---------", "---")
+	fmt.Fprintf(tw, format, "Name", "Done", "Last done", "Mastery", "URL")
+	fmt.Fprintf(tw, format, "----", "----", "---------", "-------", "---")
 
 	var totalTimesDone TimesDone
 	var latestLastDone LastDone
+	var totalMastery Mastery
 
 	for _, kata := range k.katas {
 		timesDone := TimesDone(len(kata.Done))
@@ -152,11 +153,21 @@ func (k *katas) print(doneKata string) error {
 		if kataName == doneKata {
 			kataName = "> " + kataName
 		}
-		fmt.Fprintf(tw, format, kataName, timesDone, lastDone, kata.URL)
+
+		kataMastery := mastery(int(timesDone), lastDone.t)
+		totalMastery += kataMastery
+
+		fmt.Fprintf(tw, format, kataName, timesDone, lastDone, kataMastery, kata.URL)
 	}
 
-	fmt.Fprintf(tw, format, "----", "----", "---------", "---")
-	fmt.Fprintf(tw, format, len(k.katas), totalTimesDone, latestLastDone, "")
+	fmt.Fprintf(tw, format, "----", "----", "---------", "-------", "---")
+	var avgMastery Mastery
+	if len(k.katas) > 0 {
+		avgMastery = Mastery(int(totalMastery) / len(k.katas))
+	} else {
+		avgMastery = 0
+	}
+	fmt.Fprintf(tw, format, len(k.katas), totalTimesDone, latestLastDone, avgMastery, "")
 
 	return nil
 }
