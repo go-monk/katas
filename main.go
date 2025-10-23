@@ -19,6 +19,11 @@ var sampleKatas []byte
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: katas [options]\n")
 	flag.PrintDefaults()
+	fmt.Fprintf(os.Stderr, `
+When doing a kata try to make an effort to:
+1) Do it correctly but mainly aim at increasing the power of your attention.
+2) Contemplate attentively and slowly each fault and get down to its origin.
+`)
 	os.Exit(2)
 }
 
