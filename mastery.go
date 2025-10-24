@@ -14,6 +14,8 @@ func (m Mastery) String() string {
 		"+++",
 		"++++",
 		"+++++",
+		"++++++",
+		"+++++++",
 	}
 	if int(m) < 0 || int(m) >= len(levels) {
 		return ""
@@ -30,28 +32,36 @@ func mastery(timesDone int, lastDone time.Time) Mastery {
 	switch {
 	case timesDone <= 2:
 		base = 1
-	case timesDone <= 5:
+	case timesDone <= 3:
 		base = 2
-	case timesDone <= 9:
+	case timesDone <= 5:
 		base = 3
-	case timesDone <= 14:
+	case timesDone <= 8:
 		base = 4
-	default:
+	case timesDone <= 12:
 		base = 5
+	case timesDone <= 17:
+		base = 6
+	default:
+		base = 7
 	}
 
 	// decay by recency
 	var decay int
 	daysAgo := int(time.Since(lastDone).Hours() / 24)
 	switch {
-	case daysAgo <= 3:
+	case daysAgo == 0:
 		decay = 0
-	case daysAgo <= 7:
+	case daysAgo <= 3:
 		decay = 1
-	case daysAgo <= 14:
+	case daysAgo <= 7:
 		decay = 2
-	default:
+	case daysAgo <= 14:
 		decay = 3
+	case daysAgo <= 28:
+		decay = 4
+	default:
+		decay = 5
 	}
 
 	level := base - decay
