@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
 	"text/tabwriter"
@@ -168,7 +169,7 @@ func (k *katas) print(doneKata string) error {
 	fmt.Fprintf(tw, format, "----", "----", "---------", "-------", "---")
 	var avgMastery Mastery
 	if len(k.katas) > 0 {
-		avgMastery = Mastery(int(totalMastery) / len(k.katas))
+		avgMastery = Mastery(int(math.Round(float64(totalMastery) / float64(len(k.katas)))))
 	} else {
 		avgMastery = 0
 	}
